@@ -8,13 +8,17 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.apps.rufus.taptowake.charts.LineGraph;
+import org.achartengine.GraphicalView;
 
 public class MainActivity extends Activity implements SensorEventListener {
 
-    private static final int shakeThreshold = 2;
-    private static final int coolDownPeriodBetweenShakes = 200;
-    private final static float gravitySquared = SensorManager.GRAVITY_EARTH * SensorManager.GRAVITY_EARTH;
+    private static final double shakeThreshold = 0.1;
+    private static final int coolDownPeriodBetweenShakes = 500;
+    private final static double gravitySquared = SensorManager.GRAVITY_EARTH * SensorManager.GRAVITY_EARTH;
     private class Dimension {
         public static final int X = 0;
         public static final int Y = 1;
@@ -26,12 +30,18 @@ public class MainActivity extends Activity implements SensorEventListener {
     Sensor gravity;
     Sensor proximity;
 
+    private long startTime;
     private long lastUpdate;
 
     private TextView xAccelerometerView;
     private TextView yAccelerometerView;
     private TextView zAccelerometerView;
     private TextView normAccelerometerView;
+    private RelativeLayout chartContainer;
+    private GraphicalView accelerometerGraphView;
+    private LineGraph lineGraph;
+
+
     private TextView proximityView;
     private TextView xGravityView;
     private TextView yGravityView;
@@ -43,6 +53,10 @@ public class MainActivity extends Activity implements SensorEventListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        lineGraph = new LineGraph(new String[]{"X", "Y", "Z", "Norm"}, true);
+        accelerometerGraphView = lineGraph.getView(this);
+        chartContainer = (RelativeLayout)findViewById(R.id.accelerometer_chart);
+        chartContainer.addView(accelerometerGraphView);
         xAccelerometerView = (TextView)findViewById(R.id.accelerometer_x);
         yAccelerometerView = (TextView)findViewById(R.id.accelerometer_y);
         zAccelerometerView = (TextView)findViewById(R.id.accelerometer_z);
@@ -59,9 +73,18 @@ public class MainActivity extends Activity implements SensorEventListener {
         gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
         proximity = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 
-        lastUpdate = System.currentTimeMillis();
-    }
+        startTime = System.currentTimeMillis();
+        lastUpdate = startTime;
 
+       /* float y = 8;
+        Random randomGenerator = new Random();
+        for (int x = 0; x < 1000; x++){
+            y += randomGenerator.nextGaussian();
+            lineGraph.addPoint(0, x, y);
+        }
+        accelerometerGraphView.repaint();
+        */
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -136,21 +159,28 @@ public class MainActivity extends Activity implements SensorEventListener {
         float x = values[Dimension.X];
         float y = values[Dimension.Y];
         float z = values[Dimension.Z];
-        float accelationSquareRoot = (x * x + y * y + z * z)
+        double accelationSquareRoot = (x * x + y * y + z * z)
                 / (gravitySquared);
 
         xAccelerometerView.setText(Float.toString(x));
         yAccelerometerView.setText(Float.toString(y));
         zAccelerometerView.setText(Float.toString(z));
-        normAccelerometerView.setText(Float.toString(accelationSquareRoot));
+        normAccelerometerView.setText(Double.toString(accelationSquareRoot));
 
         //kept as might need it later
         long actualTime = event.timestamp;
-        if (accelationSquareRoot >= shakeThreshold)
+        if (Math.abs(accelationSquareRoot) >= shakeThreshold)
         {
             if (actualTime - lastUpdate > coolDownPeriodBetweenShakes)
             {
                 lastUpdate = actualTime;
+                float time = actualTime - startTime;
+
+                lineGraph.addPoint(0, time, x);
+                lineGraph.addPoint(1, time, y);
+                lineGraph.addPoint(2, time, z);
+                lineGraph.addPoint(3, time, accelationSquareRoot);
+                accelerometerGraphView.repaint();
             }
         }
     }
