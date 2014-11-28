@@ -5,7 +5,100 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/accelerometer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="moving about the place" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/activity_horizontal_margin">
+                <TextView
+                    android:id="@+id/accelerometer_x"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0.2" />
+                <TextView
+                    android:id="@+id/accelerometer_y"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0.2" />
+                <TextView
+                    android:id="@+id/accelerometer_z"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0.2" />
+                <TextView
+                    android:id="@+id/accelerometer_norm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0.2" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/proximity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Am I hidden?" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/activity_horizontal_margin">
+                <TextView
+                    android:id="@+id/proximity_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0.2" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/gravity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="which way is down" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/activity_horizontal_margin">
+                <TextView
+                    android:id="@+id/gravity_x"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0.2" />
+                <TextView
+                    android:id="@+id/gravity_y"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0.2" />
+                <TextView
+                    android:id="@+id/gravity_z"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0.2" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 
 </RelativeLayout>
