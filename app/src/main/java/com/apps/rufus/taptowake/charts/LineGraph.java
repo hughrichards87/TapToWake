@@ -51,7 +51,12 @@ public class LineGraph {
     private void setupRenderer(int numberOfDatasets){
         renderers = new XYSeriesRenderer[numberOfDatasets];
         multipleRenderer = new XYMultipleSeriesRenderer();
-        multipleRenderer.setZoomEnabled(true);
+        multipleRenderer.setZoomEnabled(false);
+        multipleRenderer.setPanEnabled(false);
+        multipleRenderer.setMarginsColor(Color.WHITE);
+        multipleRenderer.setApplyBackgroundColor(false);
+        multipleRenderer.setShowLegend(false);
+        multipleRenderer.setShowLabels(false);
 
         XYSeriesRenderer renderer;
         for (int i = 0; i < numberOfDatasets; i++){
@@ -82,7 +87,7 @@ public class LineGraph {
         }
 
         XYSeries dataset = datasets[indexOfDataset];
-        if (dataset.getItemCount() > 1000)
+        if (dataset.getItemCount() > 600)
         {
             dataset.remove(0);
         }

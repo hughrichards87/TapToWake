@@ -1,6 +1,7 @@
 package com.apps.rufus.taptowake;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -8,6 +9,8 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -26,9 +29,9 @@ public class MainActivity extends Activity implements SensorEventListener {
     }
 
     private SensorManager sensorManager;
-    Sensor accelerometer;
-    Sensor gravity;
-    Sensor proximity;
+    private Sensor accelerometer;
+    private Sensor gravity;
+    private Sensor proximity;
 
     private long startTime;
     private long lastUpdate;
@@ -41,7 +44,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     private GraphicalView accelerometerGraphView;
     private LineGraph lineGraph;
 
-
+    private TextView touchCoordinatesView;
     private TextView proximityView;
     private TextView xGravityView;
     private TextView yGravityView;
@@ -53,10 +56,21 @@ public class MainActivity extends Activity implements SensorEventListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        touchCoordinatesView = (TextView)findViewById(R.id.touch_coordinates);
         lineGraph = new LineGraph(new String[]{"X", "Y", "Z", "Norm"}, true);
         accelerometerGraphView = lineGraph.getView(this);
         chartContainer = (RelativeLayout)findViewById(R.id.accelerometer_chart);
         chartContainer.addView(accelerometerGraphView);
+        accelerometerGraphView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                touchCoordinatesView.setText(
+                        String.valueOf(event.getRawX()) + " | " + String.valueOf(event.getRawY()));
+                return true;
+            }
+        });
+
         xAccelerometerView = (TextView)findViewById(R.id.accelerometer_x);
         yAccelerometerView = (TextView)findViewById(R.id.accelerometer_y);
         zAccelerometerView = (TextView)findViewById(R.id.accelerometer_z);
@@ -84,6 +98,15 @@ public class MainActivity extends Activity implements SensorEventListener {
         }
         accelerometerGraphView.repaint();
         */
+        startService();
+    }
+
+    private void startService(){
+        // use this to start and trigger a service
+        Intent i= new Intent(this, TWTService.class);
+        // potentially add data to the intent
+        //i.putExtra("KEY1", "Value to be used by the service");
+        this.startService(i);
     }
 
     @Override

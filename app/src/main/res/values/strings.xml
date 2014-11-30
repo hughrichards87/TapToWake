@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">Tap To Wake</string>
+    <string name="service_name">Tap To Wake Service</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
